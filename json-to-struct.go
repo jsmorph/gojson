@@ -267,6 +267,10 @@ func convertKeysToStrings(obj map[interface{}]interface{}) map[string]interface{
 func generateTypes(obj map[string]interface{}, structName string, tags []string, depth int, subStructMap map[string]string, convertFloats bool) string {
 	structure := "struct {"
 
+	if Pointerization == StructPointers || Pointerization == Everything {
+		structure = "* " + structure
+	}
+
 	keys := make([]string, 0, len(obj))
 	for key := range obj {
 		keys = append(keys, key)
@@ -341,7 +345,11 @@ func generateTypes(obj map[string]interface{}, structName string, tags []string,
 
 		tagList := make([]string, 0)
 		for _, t := range tags {
-			tagList = append(tagList, fmt.Sprintf("%s:\"%s\"", t, key))
+			tag := fmt.Sprintf("%s:\"%s\"", t, key)
+			if Pointerization != NoPointers {
+				tag = fmt.Sprintf("%s:\"%s,omitempty\"", t, key)
+			}
+			tagList = append(tagList, tag)
 		}
 
 		structure += fmt.Sprintf("\n%s %s `%s`",
@@ -491,6 +499,9 @@ func typeForValue(value interface{}, structName string, tags []string, subStruct
 	v := reflect.TypeOf(value).Name()
 	if v == "float64" && convertFloats {
 		v = disambiguateFloatInt(value)
+	}
+	if Pointerization == ValuePointers || Pointerization == Everything {
+		v = "*" + v
 	}
 	return v
 }
