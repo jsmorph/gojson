@@ -347,7 +347,7 @@ func generateTypes(obj map[string]interface{}, structName string, tags []string,
 		for _, t := range tags {
 			tag := fmt.Sprintf("%s:\"%s\"", t, key)
 			if Pointerization != NoPointers {
-				tag = fmt.Sprintf("%s:\"%s,omitempty\"", t, key)
+				tag = fmt.Sprintf("%s:\"%s\"", t, key)
 			}
 			tagList = append(tagList, tag)
 		}
