@@ -267,7 +267,7 @@ func convertKeysToStrings(obj map[interface{}]interface{}) map[string]interface{
 func generateTypes(obj map[string]interface{}, structName string, tags []string, depth int, subStructMap map[string]string, convertFloats bool) string {
 	structure := "struct {"
 
-	if Pointerization == StructPointers || Pointerization == Everything {
+	if 0 < depth && (Pointerization == StructPointers || Pointerization == Everything) {
 		structure = "* " + structure
 	}
 
